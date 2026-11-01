@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dodge the Blocks · Halloween Night</title>
+<style>
+:root{--bg:#100711;--panel:#211024;--cyan:#ff8a24;--muted:#d0b2d3}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#4a1b20,#180d20 48%,var(--bg) 85%);color:#f4f7ff;font-family:Arial,sans-serif;text-align:center}header{padding:22px 10px}h1{font-size:clamp(28px,6vw,50px);letter-spacing:3px}h1 span{color:var(--cyan)}main{max-width:850px;margin:auto;padding:10px 14px 40px}.panel{background:#101728ed;border:1px solid #71364d;border-radius:18px;padding:22px;margin:15px auto;box-shadow:0 12px 50px #0008,0 0 22px #ff6b1a18}.hidden{display:none!important}button{border:1px solid #41577b;background:#382039;color:white;padding:12px 17px;border-radius:10px;cursor:pointer;font-weight:bold;margin:4px}button:hover{background:#59304b}.primary{background:linear-gradient(135deg,#ffb347,#ff6b1a);color:#210d16}.muted{color:var(--muted)}.buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:20px 0}.stats{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}.stat{background:#111827;border:1px solid #2a3855;border-radius:10px;padding:10px 15px;min-width:100px}.stat small{display:block;color:var(--muted)}.stat strong{color:var(--cyan);font-size:19px}canvas{width:100%;max-width:500px;height:auto;background:#170d20;border:2px solid #ff7b24;border-radius:12px;margin:14px auto;display:block;touch-action:none}.row{margin:12px}input,select{width:min(100%,320px);padding:12px;border-radius:9px;border:1px solid #8b4b62;background:#170d20;color:white}.grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}.card{width:140px;background:#1a1020;border:1px solid #67334d;border-radius:12px;padding:14px}.swatch{height:34px;width:34px;border-radius:8px;margin:8px auto;box-shadow:0 0 16px currentColor}.podium{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.podium article{background:#1a1020;border:1px solid #67334d;border-radius:12px;padding:12px 5px;overflow-wrap:anywhere}.podium article:first-child{border-color:#ffd166}.avatar{font-size:26px;display:block}table{width:100%;border-collapse:collapse}td{text-align:left;padding:12px;border-bottom:1px solid #29354c}td:last-child{text-align:right;color:var(--cyan)}.notice{color:var(--cyan);min-height:22px}@media(max-width:480px){.podium{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Halloween expansion */
+body{background:radial-gradient(ellipse at 50% -10%,#76252d 0%,#35122f 38%,#100711 78%);background-attachment:fixed}
+body:before{content:"🎃  ✦  👻  ✦  🦇  ✦  🎃";position:fixed;top:8px;left:0;width:100%;pointer-events:none;opacity:.13;font-size:clamp(22px,5vw,46px);letter-spacing:18px;z-index:-1}
+.panel{background:linear-gradient(145deg,#24102bF2,#130d20F5);border:1px solid #a34c39;box-shadow:0 12px 50px #0009,0 0 28px #ff6b1a20}
+h1{text-shadow:0 0 18px #ff6b1a80,0 3px 0 #45132b}
+button{border-color:#85405d;background:linear-gradient(135deg,#38203f,#24152f);transition:transform .18s,filter .18s,box-shadow .18s}
+button:hover{transform:translateY(-2px);filter:brightness(1.2);box-shadow:0 0 16px #ff792c55}
+.primary{background:linear-gradient(135deg,#ffd166,#ff7b24);box-shadow:0 0 18px #ff7b2444}
+.stat{background:#1b1025;border-color:#74394f}
+canvas{background:radial-gradient(circle at 50% 30%,#32152f,#120b1b 75%);border-color:#ff8a24;box-shadow:0 0 24px #ff6b1a35}
+.section-title{width:100%;margin:22px 0 5px;color:#ffbd69;text-align:left;font-size:18px;letter-spacing:2px;text-transform:uppercase}
+.card{position:relative;background:linear-gradient(160deg,#29132f,#160e20);border-color:#754052;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 0 20px #ff762c35}
+.card.limited{border:2px solid #ffd166;background:linear-gradient(145deg,#4b1e35,#21102b);box-shadow:0 0 18px #ffb34755}
+.limited-tag{display:inline-block;padding:4px 8px;border-radius:20px;background:linear-gradient(90deg,#ffd166,#ff7b24);color:#32111c;font-size:10px;font-weight:900;letter-spacing:1px;margin:5px}
+.podium{display:flex;align-items:end;justify-content:center;gap:10px;min-height:270px;padding:22px 5px 8px}
+.podium article{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;flex:1;max-width:150px;border-radius:14px 14px 8px 8px;padding:12px 6px 10px;opacity:0;transform:translateY(45px) scale(.92);animation:podiumRise .65s cubic-bezier(.2,.8,.2,1) forwards;background:linear-gradient(180deg,#38203f,#1a1020);overflow-wrap:anywhere}
+.podium article:nth-child(1){order:2;height:220px;border:2px solid #ffd166;box-shadow:0 0 26px #ffcf5c44;animation-delay:.12s}
+.podium article:nth-child(2){order:1;height:170px;border:2px solid #c0c0c0;animation-delay:.28s}
+.podium article:nth-child(3){order:3;height:145px;border:2px solid #bd7949;animation-delay:.42s}
+.podium article:nth-child(4){order:4;height:115px;border-color:#754052;animation-delay:.56s}
+.podium .avatar{font-size:34px;margin-bottom:7px;filter:drop-shadow(0 0 8px #ff9c4a)}
+.podium .place{font-size:25px;font-weight:900;color:#ffd166;margin-bottom:5px}
+.podium .rank{font-size:10px;font-weight:900;letter-spacing:1px;padding:4px 7px;border-radius:20px;margin:6px 0;background:#40223e;color:#ffcf8b;border:1px solid #a64f42}
+.podium .points{font-size:18px;font-weight:900;color:#ff9b43;margin:5px 0}
+.rank-rookie{color:#b9d7ff!important;border-color:#5688b8!important}
+.rank-pro{color:#b7ffce!important;border-color:#42a66a!important;background:#173b2a!important}
+.rank-master{color:#ffe18a!important;border-color:#d99a24!important;background:#4a3011!important;box-shadow:0 0 12px #ffcb4a55}
+.mode-card{border:1px solid #a64f42;background:linear-gradient(135deg,#35172f,#1b1025);border-radius:14px;padding:14px;min-width:190px}
+@keyframes podiumRise{to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes spookyPulse{0%,100%{text-shadow:0 0 8px #ff7b24}50%{text-shadow:0 0 22px #ff7b24,0 0 34px #9b4dff}}
+h1 span{animation:spookyPulse 2.5s infinite}
+@media(max-width:520px){.podium{gap:5px;min-height:230px}.podium article:nth-child(1){height:190px}.podium article:nth-child(2){height:150px}.podium article:nth-child(3){height:130px}.podium article:nth-child(4){height:105px}.podium .avatar{font-size:25px}.podium .points{font-size:14px}}
+</style></head>
+<body><header><h1>DODGE <span>THE BLOCKS</span></h1><div class="muted">🎃 HALLOWEEN ARCADE // SURVIVE IF YOU CAN 👻</div></header>
+<div class="stats"><div class="stat"><small>MOEDAS</small><strong id="coins">0</strong></div><div class="stat"><small>RECORDE LOCAL</small><strong id="best">0</strong></div><div class="stat"><small>SKIN</small><strong id="skinName">Cyan</strong></div></div>
+<main>
+<section id="menu" class="panel"><p class="muted">☠️ NOITE DAS SOMBRAS ☠️</p><h2>Estás pronto para sobreviver?</h2><p class="muted">Desvia-te dos blocos, recolhe moedas e cria o teu estilo.</p><div class="buttons"><button class="primary" onclick="startGame('classic')">▶ MODO CLÁSSICO</button><button onclick="startGame('ranked')">⚔️ MODO RANKEADO</button><button onclick="showShop()">SKINS & LOJA</button><button onclick="showStats()">ESTATÍSTICAS</button><button onclick="showProfile()">ESCOLHER NOME</button><button onclick="showLeaderboard()">🏆 LEADERBOARD</button></div><p id="accountStatus" class="notice"></p></section>
+<section id="gamePanel" class="panel hidden"><div class="stats"><div class="stat"><small>MODO</small><strong id="modeLabel">CLÁSSICO</strong></div><div class="stat"><small>RANK ATUAL</small><strong id="currentRank">ROOKIE</strong></div><div class="stat"><small>PONTUAÇÃO</small><strong id="score">0</strong></div><div class="stat"><small>TEMPO</small><strong id="time">0s</strong></div></div><canvas id="game" width="500" height="500"></canvas><div><button id="leftBtn">◀</button><button id="rightBtn">▶</button></div><p class="muted">Usa ← → ou A / D. No telemóvel, mantém os botões premidos.</p><p id="gameMessage" class="notice"></p><button onclick="goMenu()">PAUSAR / MENU</button></section>
+<section id="profilePanel" class="panel hidden"><h2>O teu perfil</h2><p class="muted">Escolhe um nome único para o leaderboard global. Depois de guardado, não o podes mudar neste navegador.</p><div class="row"><input id="usernameInput" maxlength="20" placeholder="Nome (3 a 20 caracteres)"></div><div class="row"><select id="avatarSelect"><option value="1">🟦 Azul</option><option value="2">🟣 Roxo</option><option value="3">🟢 Verde</option><option value="4">🟡 Amarelo</option><option value="5">🩷 Rosa</option><option value="6">🐱 Gato</option><option value="7">🦊 Raposa</option><option value="8">🐼 Panda</option><option value="9">🐸 Sapo</option><option value="10">🐲 Dragão</option><option value="11">👾 Alien</option><option value="12">🤖 Robô</option></select></div><button class="primary" onclick="saveProfile()">GUARDAR PERFIL</button><p id="profileMessage" class="notice"></p><button onclick="goMenu()">VOLTAR</button></section>
+<section id="shopPanel" class="panel hidden"><h2>🎃 Arsenal de Skins</h2><p class="muted">Coleciona visuais por categoria. As cinco skins limitadas têm moldura e destaque especiais.</p><div id="shopGrid" class="grid"></div><p id="shopMessage" class="notice"></p><button onclick="goMenu()">VOLTAR</button></section>
+<section id="statsPanel" class="panel hidden"><h2>Estatísticas</h2><table><tr><td>Melhor pontuação</td><td id="statBest">0</td></tr><tr><td>Partidas jogadas</td><td id="statGames">0</td></tr><tr><td>Tempo total</td><td id="statTime">0s</td></tr><tr><td>Moedas</td><td id="statCoins">0</td></tr><tr><td>Skins desbloqueadas</td><td id="statSkins">1</td></tr></table><p class="muted">Estatísticas e skins guardadas neste navegador.</p><button onclick="goMenu()">VOLTAR</button></section>
+<section id="leaderboardPanel" class="panel hidden"><h2>🏆 TOP 4 JOGADORES</h2><p class="muted">Pódio global · cada jogador recebe um rank conforme a sua melhor pontuação.</p><div class="stats" style="margin:14px 0"><div class="mode-card"><strong class="rank-rookie">ROOKIE</strong><br><small>0–99 pontos</small></div><div class="mode-card"><strong class="rank-pro">PRO</strong><br><small>100–299 pontos</small></div><div class="mode-card"><strong class="rank-master">MASTER</strong><br><small>300+ pontos</small></div></div><div id="podium" class="podium"></div><p id="leaderboardMessage" class="notice"></p><button onclick="loadLeaderboard()">ATUALIZAR</button><button onclick="goMenu()">VOLTAR</button></section>
+<section id="overPanel" class="panel hidden"><h2>GAME OVER</h2><p id="finalScore"></p><p id="recordMessage" class="notice"></p><button class="primary" onclick="startGame()">JOGAR NOVAMENTE</button><button onclick="goMenu()">MENU</button></section>
+</main><footer class="muted">🎃 DODGE THE BLOCKS · HALLOWEEN EDITION 👻</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Configura estes dois valores com os dados públicos do teu projeto Supabase.
+const SUPABASE_URL="https://xxynkaztqzfybceadgfj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_tMFLr9YGBs8O2t2vCVhnng_YB6khyYe";
+const supabaseReady=window.supabase&&SUPABASE_URL.startsWith("https://")&&!SUPABASE_URL.includes("COLOCA_AQUI")&&SUPABASE_PUBLISHABLE_KEY.length>20&&!SUPABASE_PUBLISHABLE_KEY.includes("COLOCA_AQUI");
+const db=supabaseReady?window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY):null;
+const $=id=>document.getElementById(id),canvas=$("game"),ctx=canvas.getContext("2d");
+const avatars=["🟦","🟣","🟢","🟡","🩷","🐱","🦊","🐼","🐸","🐲","👾","🤖"];
+const skins=[
+{id:"cyan",name:"Phantom",category:"Clássicas",emoji:"👻",color:"#63e6ff",price:0},
+{id:"purple",name:"Witchlight",category:"Clássicas",emoji:"🔮",color:"#b197fc",price:30},
+{id:"lime",name:"Toxic Slime",category:"Clássicas",emoji:"☣️",color:"#a9f85e",price:60},
+{id:"gold",name:"Pumpkin Gold",category:"Clássicas",emoji:"🎃",color:"#ffd166",price:100},
+{id:"pink",name:"Candy Curse",category:"Clássicas",emoji:"🍬",color:"#ff70b8",price:150},
+{id:"racer",name:"Road Reaper",category:"Carros",emoji:"🏎️",color:"#ff5b35",price:180},
+{id:"police",name:"Night Patrol",category:"Carros",emoji:"🚓",color:"#8db8ff",price:220},
+{id:"monstertruck",name:"Grave Crusher",category:"Carros",emoji:"🚙",color:"#a6e36a",price:260},
+{id:"cat",name:"Black Cat",category:"Animais",emoji:"🐈‍⬛",color:"#c6a0ff",price:180},
+{id:"bat",name:"Bat Buddy",category:"Animais",emoji:"🦇",color:"#aa83ff",price:220},
+{id:"wolf",name:"Moon Wolf",category:"Animais",emoji:"🐺",color:"#b7c7d9",price:260},
+{id:"owl",name:"Haunted Owl",category:"Animais",emoji:"🦉",color:"#d49a62",price:300},
+{id:"limited1",name:"Blood Moon",category:"LIMITADAS",emoji:"🌕",color:"#ff3d55",price:450,limited:true},
+{id:"limited2",name:"Cursed Crown",category:"LIMITADAS",emoji:"👑",color:"#ffd166",price:500,limited:true},
+{id:"limited3",name:"Vampire Lord",category:"LIMITADAS",emoji:"🧛",color:"#c14bff",price:550,limited:true},
+{id:"limited4",name:"Headless Rider",category:"LIMITADAS",emoji:"🎃",color:"#ff8a24",price:600,limited:true},
+{id:"limited5",name:"Soul Flame",category:"LIMITADAS",emoji:"🔥",color:"#57f2d2",price:650,limited:true}
+];
+const defaults={coins:0,best:0,games:0,totalSeconds:0,unlocked:["cyan"],equipped:"cyan"};
+function loadData(){try{let d=JSON.parse(localStorage.getItem("dtbSave")||"{}");return {...defaults,...d,unlocked:Array.isArray(d.unlocked)?[...new Set(["cyan",...d.unlocked])]:["cyan"]}}catch{return {...defaults}}}
+let gameMode="classic";let data=loadData(),player={x:230,y:430,w:40,h:40},blocks=[],score=0,elapsed=0,spawn=0,running=false,keys={},held={left:false,right:false},last=0,raf=0;
+function saveData(){localStorage.setItem("dtbSave",JSON.stringify(data))}
+function username(){return localStorage.getItem("dtbUsername")||""}
+function avatarId(){return Number(localStorage.getItem("dtbAvatar")||1)}
+function skin(){return skins.find(s=>s.id===data.equipped)||skins[0]}
+function rankFor(v){return v>=300?"MASTER":v>=100?"PRO":"ROOKIE"}
+function rankClass(r){return r==="MASTER"?"rank-master":r==="PRO"?"rank-pro":"rank-rookie"}
+function update(){ $("coins").textContent=data.coins;$("best").textContent=data.best;$("skinName").textContent=skin().name;$("accountStatus").textContent=username()?"A jogar como: "+username():"Escolhe um nome em ESCOLHER NOME para começar."}
+function hide(){["menu","gamePanel","profilePanel","shopPanel","statsPanel","leaderboardPanel","overPanel"].forEach(id=>$(id).classList.add("hidden"))}
+function goMenu(){running=false;cancelAnimationFrame(raf);hide();$("menu").classList.remove("hidden");update()}
+function showProfile(){running=false;cancelAnimationFrame(raf);hide();$("profilePanel").classList.remove("hidden");$("usernameInput").value=username();$("usernameInput").disabled=!!username();$("avatarSelect").value=String(avatarId());$("profileMessage").textContent=username()?"O teu nome já está bloqueado neste navegador.":"O nome tem de ser único e ficará bloqueado depois de guardado."}
+async function saveProfile(){let n=$("usernameInput").value.trim().replace(/\s+/g," ");if(username()){$("profileMessage").textContent="O nome já está bloqueado e não pode ser alterado neste navegador.";return}if(n.length<3||n.length>20){$("profileMessage").textContent="O nome deve ter entre 3 e 20 caracteres.";return}if(!/^[\p{L}\p{N}_ -]+$/u.test(n)){$("profileMessage").textContent="Usa apenas letras, números, espaços, _ ou -.";return}if(!db){localStorage.setItem("dtbUsername",n);localStorage.setItem("dtbAvatar",$("avatarSelect").value);$("profileMessage").textContent="Nome bloqueado neste navegador. Configura o Supabase para o tornar único globalmente.";$("usernameInput").disabled=true;update();return}$("profileMessage").textContent="A verificar se o nome está disponível...";let {error}=await db.from("player_names").insert({username:n,username_key:n.toLocaleLowerCase(),avatar_id:Number($("avatarSelect").value)});if(error){$("profileMessage").textContent=error.code==="23505"?"Esse nome já foi escolhido. Tenta outro.":"Não foi possível guardar o nome: "+error.message;return}localStorage.setItem("dtbUsername",n);localStorage.setItem("dtbAvatar",$("avatarSelect").value);$("usernameInput").disabled=true;$("profileMessage").textContent="Nome reservado e bloqueado! Já podes jogar.";update()}
+function formatTime(s){s=Math.floor(s);return s>=60?`${Math.floor(s/60)}m ${s%60}s`:`${s}s`}
+function showStats(){running=false;cancelAnimationFrame(raf);$("statBest").textContent=data.best;$("statGames").textContent=data.games;$("statTime").textContent=formatTime(data.totalSeconds);$("statCoins").textContent=data.coins;$("statSkins").textContent=data.unlocked.length;hide();$("statsPanel").classList.remove("hidden")}
+function showShop(){running=false;cancelAnimationFrame(raf);renderShop();hide();$("shopPanel").classList.remove("hidden")}
+function renderShop(){$("shopGrid").innerHTML="";let categories=["Clássicas","Carros","Animais","LIMITADAS"];categories.forEach(cat=>{let title=document.createElement("h3");title.className="section-title";title.textContent=cat==="LIMITADAS"?"✦ EDIÇÃO LIMITADA · 5 SKINS EXCLUSIVAS ✦":"▸ "+cat;$("shopGrid").append(title);skins.filter(s=>s.category===cat).forEach(s=>{let c=document.createElement("div");c.className="card"+(s.limited?" limited":"");let sw=document.createElement("div");sw.className="swatch";sw.style.background=s.color;sw.style.color=s.color;sw.textContent=s.emoji;sw.style.display="grid";sw.style.placeItems="center";sw.style.fontSize="25px";let name=document.createElement("strong");name.textContent=s.name;let price=document.createElement("p");price.textContent=s.price?s.price+" moedas":"Grátis";let b=document.createElement("button");let owned=data.unlocked.includes(s.id);b.textContent=data.equipped===s.id?"Equipada":owned?"Equipar":"Comprar";b.disabled=data.equipped===s.id;b.onclick=()=>{if(!owned){if(data.coins<s.price){$("shopMessage").textContent="Precisas de mais moedas para desbloquear esta skin.";return}data.coins-=s.price;data.unlocked.push(s.id)}data.equipped=s.id;saveData();update();renderShop()};c.append(sw,name);if(s.limited){let tag=document.createElement("div");tag.className="limited-tag";tag.textContent="✦ LIMITADA ✦";c.append(tag)}c.append(price,b);$("shopGrid").append(c)})})}
+function startGame(mode="classic"){gameMode=mode;if(!username()){showProfile();$("profileMessage").textContent="Escolhe um nome antes de jogar.";return}cancelAnimationFrame(raf);player={x:230,y:430,w:40,h:40};blocks=[];score=0;elapsed=0;spawn=0;last=0;keys={};held.left=held.right=false;data.games++;saveData();$("score").textContent=0;$("time").textContent="0s";$("modeLabel").textContent=gameMode==="ranked"?"RANKEADO":"CLÁSSICO";$("currentRank").textContent=rankFor(data.best);$("currentRank").className=rankClass(rankFor(data.best));hide();$("gamePanel").classList.remove("hidden");running=true;raf=requestAnimationFrame(loop)}
+function endGame(){if(!running)return;running=false;cancelAnimationFrame(raf);let record=score>data.best;if(record)data.best=score;saveData();submitScore(score);update();$("finalScore").textContent=`${gameMode==="ranked"?"RANKEADO":"CLÁSSICO"} · Pontuação: ${score} · Tempo: ${formatTime(elapsed)} · Rank: ${rankFor(score)}`;$("recordMessage").textContent=record?"NOVO RECORDE!":"Continua a jogar para bateres o teu recorde!";hide();$("overPanel").classList.remove("hidden")}
+function draw(){
+ctx.clearRect(0,0,500,500);
+ctx.strokeStyle="#452744";ctx.lineWidth=1;
+for(let x=0;x<=500;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,500);ctx.stroke()}
+for(let y=0;y<=500;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(500,y);ctx.stroke()}
+blocks.forEach(b=>{ctx.fillStyle="#ff4d6d";ctx.shadowColor="#ff3155";ctx.shadowBlur=9;ctx.fillRect(b.x,b.y,b.w,b.h)});ctx.shadowBlur=0;
+const s=skin(),x=player.x,y=player.y,cx=x+20,cy=y+20,t=elapsed;
+// Aura and signature effects for the currently equipped skin.
+ctx.save();ctx.globalAlpha=.8;ctx.strokeStyle=s.color;ctx.fillStyle=s.color;ctx.shadowColor=s.color;ctx.shadowBlur=18;
+if(s.id==="cyan") { // Phantom: floating spectral wisps
+ for(let i=0;i<3;i++){let a=t*2+i*2.1;ctx.globalAlpha=.45;ctx.beginPath();ctx.arc(cx+Math.cos(a)*29,cy+Math.sin(a)*19,4+Math.sin(a*2)*2,0,Math.PI*2);ctx.fill()}
+ ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(cx,cy,29+Math.sin(t*4)*3,0,Math.PI*2);ctx.stroke();
+} else if(s.id==="purple") { // Witchlight: orbiting magic stars
+ for(let i=0;i<4;i++){let a=t*2.5+i*Math.PI/2,px=cx+Math.cos(a)*31,py=cy+Math.sin(a)*25;ctx.globalAlpha=.9;ctx.save();ctx.translate(px,py);ctx.rotate(t*2);ctx.fillRect(-3,-3,6,6);ctx.restore()}
+} else if(s.id==="lime") { // Toxic Slime: bubbling droplets
+ for(let i=0;i<5;i++){let a=t*1.7+i*1.25,px=cx+Math.cos(a)*27,py=cy+Math.sin(a*1.4)*24;ctx.globalAlpha=.65;ctx.beginPath();ctx.arc(px,py,2.5+(i%2)*1.5,0,Math.PI*2);ctx.fill()}
+} else if(s.id==="gold") { // Pumpkin: flickering flame crown
+ for(let i=0;i<5;i++){let px=x+4+i*8,py=y-5-Math.abs(Math.sin(t*9+i))*10;ctx.globalAlpha=.7;ctx.beginPath();ctx.moveTo(px-3,y+1);ctx.quadraticCurveTo(px-5,py+5,px,py);ctx.quadraticCurveTo(px+6,py+5,px+3,y+1);ctx.fill()}
+} else if(s.id==="pink") { // Candy: sweet sparkling trail
+ for(let i=0;i<6;i++){let a=t*2+i*1.05;ctx.globalAlpha=.8;ctx.beginPath();ctx.arc(cx+Math.cos(a)*31,cy+Math.sin(a)*26,2.5,0,Math.PI*2);ctx.fill()}
+} else if(["racer","police","monstertruck"].includes(s.id)) { // Cars: speed streaks and rotating wheels
+ ctx.globalAlpha=.5;for(let i=0;i<4;i++){let yy=y+8+i*8;ctx.fillRect(x-15-(i%2)*5,yy,12,2)}
+ ctx.globalAlpha=1;for(let wx of [x+7,x+33]){ctx.beginPath();ctx.arc(wx,y+34,5+Math.sin(t*12)*.5,0,Math.PI*2);ctx.stroke()}
+} else if(s.id==="cat") { // Cat: paw-print orbit
+ for(let i=0;i<3;i++){let a=t*1.8+i*2.1,px=cx+Math.cos(a)*30,py=cy+Math.sin(a)*25;ctx.globalAlpha=.65;ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px-4,py-5,2,0,Math.PI*2);ctx.arc(px+4,py-5,2,0,Math.PI*2);ctx.fill()}
+} else if(s.id==="bat") { // Bat: flapping shadow wings
+ let flap=Math.sin(t*12)*5;ctx.globalAlpha=.65;ctx.beginPath();ctx.moveTo(cx-12,cy);ctx.quadraticCurveTo(cx-32,cy-20-flap,cx-35,cy+4);ctx.quadraticCurveTo(cx-22,cy+2,cx-12,cy+9);ctx.moveTo(cx+12,cy);ctx.quadraticCurveTo(cx+32,cy-20-flap,cx+35,cy+4);ctx.quadraticCurveTo(cx+22,cy+2,cx+12,cy+9);ctx.stroke()
+} else if(s.id==="wolf") { // Wolf: moon halo and icy sparks
+ ctx.globalAlpha=.5;ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,30,-Math.PI*.8,Math.PI*.8);ctx.stroke();for(let i=0;i<4;i++){let a=t*2+i*1.57;ctx.globalAlpha=.8;ctx.fillRect(cx+Math.cos(a)*34-2,cy+Math.sin(a)*27-2,4,4)}
+} else if(s.id==="owl") { // Owl: feather-like falling motes
+ for(let i=0;i<5;i++){let px=cx-28+i*14,py=cy-30+((t*24+i*13)%62);ctx.globalAlpha=.55;ctx.save();ctx.translate(px,py);ctx.rotate(.5);ctx.fillRect(-2,-5,4,10);ctx.restore()}
+} else if(s.id==="limited1") { // Blood Moon: crimson eclipse
+ ctx.globalAlpha=.45;ctx.lineWidth=4;ctx.beginPath();ctx.arc(cx,cy,33+Math.sin(t*2)*2,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.8;ctx.beginPath();ctx.arc(cx+25,cy-25,7,0,Math.PI*2);ctx.fill()
+} else if(s.id==="limited2") { // Cursed Crown: golden crown sparks
+ ctx.globalAlpha=1;ctx.beginPath();ctx.moveTo(cx-15,cy-27);ctx.lineTo(cx-12,cy-39);ctx.lineTo(cx-3,cy-30);ctx.lineTo(cx+3,cy-41);ctx.lineTo(cx+11,cy-30);ctx.lineTo(cx+16,cy-37);ctx.lineTo(cx+15,cy-24);ctx.closePath();ctx.fill();
+} else if(s.id==="limited3") { // Vampire: drifting bats
+ for(let i=0;i<3;i++){let a=t*1.4+i*2.1,px=cx+Math.cos(a)*35,py=cy+Math.sin(a)*29;ctx.globalAlpha=.9;ctx.font="13px Arial";ctx.fillText("🦇",px-7,py+5)}
+} else if(s.id==="limited4") { // Headless Rider: ghostly fire trail
+ for(let i=0;i<6;i++){let px=x+4+i*7,py=y+40+((t*32+i*9)%24);ctx.globalAlpha=.55;ctx.beginPath();ctx.arc(px,py,2+(i%2),0,Math.PI*2);ctx.fill()}
+} else if(s.id==="limited5") { // Soul Flame: animated flame aura
+ for(let i=0;i<7;i++){let a=t*2+i*.9,px=cx+Math.cos(a)*27,py=cy+Math.sin(a)*22;ctx.globalAlpha=.75;ctx.beginPath();ctx.arc(px,py,3+Math.sin(t*7+i)*1.5,0,Math.PI*2);ctx.fill()}
+}
+ctx.restore();
+// Character body, with a unique emoji silhouette per skin.
+ctx.save();ctx.shadowColor=s.color;ctx.shadowBlur=s.limited?30:20;ctx.fillStyle=s.color;ctx.globalAlpha=.22;ctx.beginPath();ctx.roundRect(x-3,y-3,46,46,12);ctx.fill();ctx.globalAlpha=1;
+ctx.font="34px 'Apple Color Emoji','Segoe UI Emoji',sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(s.emoji,cx,cy+1);ctx.restore();
+}
+function loop(t){if(!running)return;let dt=last?Math.min((t-last)/1000,.04):0;last=t;elapsed+=dt;$("time").textContent=formatTime(elapsed);if(keys.arrowleft||keys.a||held.left)player.x-=360*dt;if(keys.arrowright||keys.d||held.right)player.x+=360*dt;player.x=Math.max(0,Math.min(460,player.x));spawn+=dt;if(spawn>=Math.max(.24,.75-score*.003-(gameMode==="ranked"?.08:0))){blocks.push({x:Math.random()*455,y:-35,w:25+Math.random()*25,h:25+Math.random()*25,speed:175+Math.random()*100+score*1.5+(gameMode==="ranked"?45:0)});spawn=0}for(let i=blocks.length-1;i>=0;i--){let b=blocks[i];b.y+=b.speed*dt;if(player.x<b.x+b.w&&player.x+40>b.x&&player.y<b.y+b.h&&player.y+40>b.y){endGame();return}if(b.y>500){blocks.splice(i,1);score++;data.coins++;$("score").textContent=score;update();saveData()}}draw();raf=requestAnimationFrame(loop)}
+document.addEventListener("keydown",e=>{keys[e.key.toLowerCase()]=true;if(["ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault()});document.addEventListener("keyup",e=>keys[e.key.toLowerCase()]=false);function hold(id,dir){let b=$(id);b.onpointerdown=e=>{e.preventDefault();held[dir]=true};["pointerup","pointerleave","pointercancel"].forEach(ev=>b.addEventListener(ev,e=>{e.preventDefault();held[dir]=false}))}hold("leftBtn","left");hold("rightBtn","right");
+async function submitScore(finalScore){if(!db||!username()||finalScore<=0)return;let {error}=await db.from("guest_scores").insert({username:username(),score:finalScore,avatar_id:avatarId()});if(error)console.error("Erro a guardar pontuação:",error.message)}
+async function showLeaderboard(){running=false;cancelAnimationFrame(raf);hide();$("leaderboardPanel").classList.remove("hidden");await loadLeaderboard()}
+async function loadLeaderboard(){let p=$("podium");p.innerHTML="";p.classList.remove("animate");if(!db){$("leaderboardMessage").textContent="Configura a Project URL e a Publishable key no código.";return}$("leaderboardMessage").textContent="A convocar os sobreviventes...";let {data:scores,error}=await db.from("guest_scores").select("username,score,created_at,avatar_id").order("score",{ascending:false}).limit(500);if(error){$("leaderboardMessage").textContent="Erro: "+error.message;return}let best=new Map();(scores||[]).forEach(s=>{let k=s.username.trim().toLowerCase();if(!best.has(k)||s.score>best.get(k).score)best.set(k,s)});let top=[...best.values()].sort((a,b)=>b.score-a.score).slice(0,4);if(!top.length){$("leaderboardMessage").textContent="Ainda não há pontuações. Sê o primeiro a conquistar o pódio!";return}top.forEach((s,i)=>{let a=document.createElement("article"),av=document.createElement("span"),place=document.createElement("div"),n=document.createElement("strong"),rank=document.createElement("span"),pts=document.createElement("p");av.className="avatar";av.textContent=(i===0?"👑 ":"")+(avatars[(s.avatar_id||1)-1]||"🟦");place.className="place";place.textContent=["🥇","🥈","🥉","🏅"][i];n.textContent=s.username;rank.className="rank "+rankClass(rankFor(s.score));rank.textContent=rankFor(s.score);pts.className="points";pts.textContent=s.score+" pts";a.append(av,place,n,rank,pts);p.append(a)});$("leaderboardMessage").textContent="Os quatro melhores sobreviventes da noite. O teu rank depende da tua melhor pontuação."}
+update();goMenu();
+</script></body></html>
